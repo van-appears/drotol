@@ -1,0 +1,25 @@
+{
+  "name": "drotol",
+  "version": "0.0.1",
+  "description": "Line controlled synth",
+  "main": "server.js",
+  "scripts": {
+    "build": "node_modules/.bin/browserify -e src/app.js -o public/js/drotol.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/van-appears/drotol.git"
+  },
+  "keywords": [
+    "webaudioapi"
+  ],
+  "author": "Van Appears",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/van-appears/drotol/issues"
+  },
+  "homepage": "https://github.com/van-appears/drotol#readme",
+  "devDependencies": {
+    "browserify": "^14.5.0"
+  }
+}
