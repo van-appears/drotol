@@ -1,4 +1,63 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+function updateModelPosition (block) {
+  block.dataPos += block.dataSpeed
+  if (block.dataPos >= 128) {
+    block.dataPos -= 128
+  }
+}
+
+function updateModelPositions (model) {
+  updateModelPosition(model.oscillator)
+  updateModelPosition(model.gain)
+  updateModelPosition(model.filterFrequency)
+  updateModelPosition(model.filterQ)
+}
+
+function getScaledValue (block) {
+  return (254.0 - block.data[Math.floor(block.dataPos)]) / 254.0
+}
+
+function AudioGraphControl (audioGraph, model) {
+  this.model = model
+  this.audioGraph = audioGraph
+  this.lastOscillatorType = audioGraph.oscillator.type
+  this.lastFilterType = audioGraph.filter.type
+  this.lastEchoLength = audioGraph.delay.delayTime.value
+}
+
+AudioGraphControl.prototype.update = function () {
+  if (this.model.oscillator.type !== this.lastOscillatorType) {
+    this.lastOscillatorType = this.model.oscillator.type
+    this.audioGraph.oscillator.type = this.lastOscillatorType
+  }
+  if (this.model.filterFrequency.type !== this.lastFilterType) {
+    this.lastFilterType = this.model.filterFrequency.type
+    this.audioGraph.filter.type = this.lastFilterType
+  }
+  if (this.model.echo.length !== this.lastEchoLength) {
+    this.lastEchoLength = this.model.echo.length
+    this.audioGraph.delay.delayTime.value = this.lastEchoLength
+  }
+
+  updateModelPositions(this.model)
+  this.audioGraph.delayGain.gain.value = this.model.echo.sustain
+
+  var frequency = 60 * Math.pow(8, getScaledValue(this.model.oscillator))
+  this.audioGraph.oscillator.frequency.value = frequency
+
+  var gain = getScaledValue(this.model.gain)
+  this.audioGraph.oscillatorGain.gain.value = gain
+
+  var filterFrequency = 60 * Math.pow(100, getScaledValue(this.model.filterFrequency))
+  this.audioGraph.filter.frequency.value = filterFrequency
+
+  var filterQ = this.model.filterQ.multiplier * getScaledValue(this.model.filterQ)
+  this.audioGraph.filter.Q.value = filterQ
+}
+
+module.exports = AudioGraphControl
+
+},{}],2:[function(require,module,exports){
 var canvas = document.querySelector('#draw')
 var canvasLeft = canvas.offsetLeft
 var canvasTop = canvas.offsetTop
@@ -69,7 +128,7 @@ function CanvasControl (model) {
   canvas.addEventListener('mouseup', this.mouseUp.bind(this))
 }
 
-CanvasControl.prototype.refresh = function () {
+CanvasControl.prototype.update = function () {
   var active = this.model[this.model.active]
   this.data = active && active.data
   this.updated = false
@@ -119,81 +178,25 @@ CanvasControl.prototype.mouseMove = function (mouseEvt) {
 
 module.exports = CanvasControl
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 var createModel = require('./create-model')
 var createAudioGraph = require('./create-audio-graph')
-var audioGraphControl = require('./audio-graph-control')
+var AudioGraphControl = require('./AudioGraphControl')
 var CanvasControl = require('./CanvasControl')
 var connectListeners = require('./connect-listeners')
 
 var model = createModel()
 var audioGraph = createAudioGraph(model)
-var graphUpdater = audioGraphControl(audioGraph, model)
+var graphControl = new AudioGraphControl(audioGraph, model)
 var canvasControl = new CanvasControl(model)
 connectListeners(model)
 
 setInterval(function () {
-  graphUpdater()
-  canvasControl.refresh()
+  graphControl.update()
+  canvasControl.update()
 }, 20)
 
-},{"./CanvasControl":1,"./audio-graph-control":3,"./connect-listeners":4,"./create-audio-graph":5,"./create-model":6}],3:[function(require,module,exports){
-function updateModelPosition (block) {
-  block.dataPos += block.dataSpeed
-  if (block.dataPos >= 128) {
-    block.dataPos -= 128
-  }
-}
-
-function updateModelPositions (model) {
-  updateModelPosition(model.oscillator)
-  updateModelPosition(model.gain)
-  updateModelPosition(model.filterFrequency)
-  updateModelPosition(model.filterQ)
-}
-
-function getScaledValue (block) {
-  return (254.0 - block.data[Math.floor(block.dataPos)]) / 254.0
-}
-
-module.exports = function audioGraphControl (audioGraph, model) {
-  var lastOscillatorType = audioGraph.oscillator.type
-  var lastFilterType = audioGraph.filter.type
-  var lastEchoLength = audioGraph.delay.delayTime.value
-
-  return function update () {
-    if (model.oscillator.type !== lastOscillatorType) {
-      lastOscillatorType = model.oscillator.type
-      audioGraph.oscillator.type = lastOscillatorType
-    }
-    if (model.filterFrequency.type !== lastFilterType) {
-      lastFilterType = model.filterFrequency.type
-      audioGraph.filter.type = lastFilterType
-    }
-    if (model.echo.length !== lastEchoLength) {
-      lastEchoLength = model.echo.length
-      audioGraph.delay.delayTime.value = lastEchoLength
-    }
-
-    updateModelPositions(model)
-    audioGraph.delayGain.gain.value = model.echo.sustain
-
-    var frequency = 60 * Math.pow(8, getScaledValue(model.oscillator))
-    audioGraph.oscillator.frequency.value = frequency
-
-    var gain = getScaledValue(model.gain)
-    audioGraph.oscillatorGain.gain.value = gain
-
-    var filterFrequency = 60 * Math.pow(100, getScaledValue(model.filterFrequency))
-    audioGraph.filter.frequency.value = filterFrequency
-
-    var filterQ = model.filterQ.multiplier * getScaledValue(model.filterQ)
-    console.log(">>>", filterQ)
-    audioGraph.filter.Q.value = filterQ
-  }
-}
-
-},{}],4:[function(require,module,exports){
+},{"./AudioGraphControl":1,"./CanvasControl":2,"./connect-listeners":4,"./create-audio-graph":5,"./create-model":6}],4:[function(require,module,exports){
 var speed = document.querySelector('#speed')
 var filterType = document.querySelector('#filterType')
 var oscillatorType = document.querySelector('#oscillatorType')
@@ -352,4 +355,4 @@ module.exports = function createModel () {
   }
 }
 
-},{}]},{},[2]);
+},{}]},{},[3]);

@@ -68,7 +68,7 @@ function CanvasControl (model) {
   canvas.addEventListener('mouseup', this.mouseUp.bind(this))
 }
 
-CanvasControl.prototype.refresh = function () {
+CanvasControl.prototype.update = function () {
   var active = this.model[this.model.active]
   this.data = active && active.data
   this.updated = false
