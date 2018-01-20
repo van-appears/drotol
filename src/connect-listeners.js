@@ -14,13 +14,13 @@ function radioClick (evt) {
   model.active = selected
   active = model[selected]
   if (active) {
-    speed.value = Math.log(active.dataSpeed) / Math.log(2)
+    speed.value = (Math.log(active.dataSpeed) / Math.log(2)) + 2
     what.innerHTML = active.label
   }
 }
 
 function speedChange (evt) {
-  active.dataSpeed = Math.pow(2, evt.target.value)
+  active.dataSpeed = Math.pow(2, evt.target.value - 2)
 }
 
 function echoLengthChange (evt) {
@@ -34,7 +34,6 @@ function echoSustainChange (evt) {
 function filterTypeChange (evt) {
   var selected = evt.target.value
   model.filterFrequency.type = selected
-  console.log("?????",model.filterFrequency)
   switch (selected) {
     case 'notch':
     case 'bandpass':

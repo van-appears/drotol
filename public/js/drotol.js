@@ -191,9 +191,13 @@ var graphControl = new AudioGraphControl(audioGraph, model)
 var canvasControl = new CanvasControl(model)
 connectListeners(model)
 
+var flop = false
 setInterval(function () {
   graphControl.update()
-  canvasControl.update()
+  if (flop) {
+    canvasControl.update()
+  }
+  flop = !flop
 }, 20)
 
 },{"./AudioGraphControl":1,"./CanvasControl":2,"./connect-listeners":4,"./create-audio-graph":5,"./create-model":6}],4:[function(require,module,exports){
@@ -213,13 +217,13 @@ function radioClick (evt) {
   model.active = selected
   active = model[selected]
   if (active) {
-    speed.value = Math.log(active.dataSpeed) / Math.log(2)
+    speed.value = (Math.log(active.dataSpeed) / Math.log(2)) + 2
     what.innerHTML = active.label
   }
 }
 
 function speedChange (evt) {
-  active.dataSpeed = Math.pow(2, evt.target.value)
+  active.dataSpeed = Math.pow(2, evt.target.value - 2)
 }
 
 function echoLengthChange (evt) {
@@ -233,7 +237,6 @@ function echoSustainChange (evt) {
 function filterTypeChange (evt) {
   var selected = evt.target.value
   model.filterFrequency.type = selected
-  console.log("?????",model.filterFrequency)
   switch (selected) {
     case 'notch':
     case 'bandpass':
@@ -318,7 +321,7 @@ function modelBlock (additional) {
   var block = {
     data: arr,
     dataPos: 0,
-    dataSpeed: 1
+    dataSpeed: 0.25
   }
   additional = additional || {}
   for (var key in additional) {

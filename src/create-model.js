@@ -6,7 +6,7 @@ function modelBlock (additional) {
   var block = {
     data: arr,
     dataPos: 0,
-    dataSpeed: 1
+    dataSpeed: 0.25
   }
   additional = additional || {}
   for (var key in additional) {
