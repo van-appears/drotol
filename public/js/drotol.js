@@ -7,7 +7,8 @@ function updateModelPosition (block) {
 }
 
 function updateModelPositions (model) {
-  updateModelPosition(model.oscillator)
+  updateModelPosition(model.oscillator1Frequency)
+  updateModelPosition(model.oscillator2Frequency)
   updateModelPosition(model.gain)
   updateModelPosition(model.filterFrequency)
   updateModelPosition(model.filterQ)
@@ -20,15 +21,20 @@ function getScaledValue (block) {
 function AudioGraphControl (audioGraph, model) {
   this.model = model
   this.audioGraph = audioGraph
-  this.lastOscillatorType = audioGraph.oscillator.type
+  this.lastOscillator1Type = audioGraph.oscillator1.type
+  this.lastOscillator2Type = audioGraph.oscillator2.type
   this.lastFilterType = audioGraph.filter.type
   this.lastEchoLength = audioGraph.delay.delayTime.value
 }
 
 AudioGraphControl.prototype.update = function () {
-  if (this.model.oscillator.type !== this.lastOscillatorType) {
-    this.lastOscillatorType = this.model.oscillator.type
-    this.audioGraph.oscillator.type = this.lastOscillatorType
+  if (this.model.oscillator1Frequency.type !== this.lastOscillator1Type) {
+    this.lastOscillator1Type = this.model.oscillator1Frequency.type
+    this.audioGraph.oscillator1.type = this.lastOscillator1Type
+  }
+  if (this.model.oscillator2Frequency.type !== this.lastOscillator2Type) {
+    this.lastOscillator2Type = this.model.oscillator2Frequency.type
+    this.audioGraph.oscillator2.type = this.lastOscillator2Type
   }
   if (this.model.filterFrequency.type !== this.lastFilterType) {
     this.lastFilterType = this.model.filterFrequency.type
@@ -42,8 +48,11 @@ AudioGraphControl.prototype.update = function () {
   updateModelPositions(this.model)
   this.audioGraph.delayGain.gain.value = this.model.echo.sustain
 
-  var frequency = 60 * Math.pow(8, getScaledValue(this.model.oscillator))
-  this.audioGraph.oscillator.frequency.value = frequency
+  var frequency1 = 60 * Math.pow(8, getScaledValue(this.model.oscillator1Frequency))
+  this.audioGraph.oscillator1.frequency.value = frequency1
+
+  var frequency2 = 60 * Math.pow(8, getScaledValue(this.model.oscillator2Frequency))
+  this.audioGraph.oscillator2.frequency.value = frequency2
 
   var gain = getScaledValue(this.model.gain)
   this.audioGraph.oscillatorGain.gain.value = gain
@@ -206,56 +215,58 @@ var filterType = document.querySelector('#filterType')
 var oscillatorType = document.querySelector('#oscillatorType')
 var echoLength = document.querySelector('#echoLength')
 var echoSustain = document.querySelector('#echoSustain')
-var model = {}
-var active = {}
 
-function radioClick (evt) {
-  var selected = evt.target.value
-  var what = document.querySelector('.what')
-  document.querySelector('body').className = 'selected_' + selected
+module.exports = function connectListeners (model) {
+  var active = model[model.active]
 
-  model.active = selected
-  active = model[selected]
-  if (active) {
-    speed.value = (Math.log(active.dataSpeed) / Math.log(2)) + 2
-    what.innerHTML = active.label
+  function radioClick (evt) {
+    var selected = evt.target.value
+    var what = document.querySelector('.what')
+    document.querySelector('body').className = 'selected_' + selected
+
+    model.active = selected
+    active = model[selected]
+    if (active) {
+      speed.value = (Math.log(active.dataSpeed) / Math.log(2)) + 2
+      what.innerHTML = active.label
+      if (selected === 'oscillator1Frequency') {
+        oscillatorType.value = model.oscillator1Frequency.type
+      } else if (selected === 'oscillator2Frequency') {
+        oscillatorType.value = model.oscillator2Frequency.type
+      }
+    }
   }
-}
 
-function speedChange (evt) {
-  active.dataSpeed = Math.pow(2, evt.target.value - 2)
-}
-
-function echoLengthChange (evt) {
-  active.length = evt.target.value
-}
-
-function echoSustainChange (evt) {
-  active.sustain = evt.target.value
-}
-
-function filterTypeChange (evt) {
-  var selected = evt.target.value
-  model.filterFrequency.type = selected
-  switch (selected) {
-    case 'notch':
-    case 'bandpass':
-      model.filterQ.multiplier = 30
-      model.filterQ.label = 'Filter bandwidth'
-      break
-    default:
-      model.filterQ.multiplier = 1
-      model.filterQ.label = 'Filter resonance'
+  function speedChange (evt) {
+    active.dataSpeed = Math.pow(2, evt.target.value - 2)
   }
-}
 
-function oscillatorTypeChange (evt) {
-  model.oscillator.type = evt.target.value
-}
+  function echoLengthChange (evt) {
+    active.length = evt.target.value
+  }
 
-module.exports = function connectListeners (_model) {
-  model = _model
-  active = model[model.active]
+  function echoSustainChange (evt) {
+    active.sustain = evt.target.value
+  }
+
+  function filterTypeChange (evt) {
+    var selected = evt.target.value
+    model.filterFrequency.type = selected
+    switch (selected) {
+      case 'notch':
+      case 'bandpass':
+        model.filterQ.multiplier = 30
+        model.filterQ.label = 'Filter bandwidth'
+        break
+      default:
+        model.filterQ.multiplier = 20
+        model.filterQ.label = 'Filter resonance'
+    }
+  }
+
+  function oscillatorTypeChange (evt) {
+    active.type = evt.target.value
+  }
 
   speed.value = active.dataSpeed
   speed.addEventListener('input', speedChange)
@@ -269,7 +280,7 @@ module.exports = function connectListeners (_model) {
   filterType.value = model.filterFrequency.type
   filterType.addEventListener('change', filterTypeChange)
 
-  oscillatorType.value = model.oscillator.type
+  oscillatorType.value = model.oscillator1Frequency.type
   oscillatorType.addEventListener('change', oscillatorTypeChange)
 
   var radios = document.querySelectorAll('input[name="box"]')
@@ -282,29 +293,36 @@ module.exports = function connectListeners (_model) {
 },{}],5:[function(require,module,exports){
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)()
 
-var oscillator = audioCtx.createOscillator()
+var oscillator1 = audioCtx.createOscillator()
+var oscillator2 = audioCtx.createOscillator()
+var ringMod = audioCtx.createGain()
 var oscillatorGain = audioCtx.createGain()
 var filter = audioCtx.createBiquadFilter()
 var delay = audioCtx.createDelay()
 var delayGain = audioCtx.createGain()
 
-oscillator.connect(oscillatorGain)
+oscillator1.connect(ringMod)
+oscillator2.connect(ringMod.gain)
+ringMod.connect(oscillatorGain)
 oscillatorGain.connect(filter)
 filter.connect(audioCtx.destination)
 filter.connect(delay)
 delay.connect(delayGain)
 delayGain.connect(audioCtx.destination)
 delayGain.connect(delay)
-oscillator.start()
+oscillator1.start()
+oscillator2.start()
 
 module.exports = function createAudioGraph (model) {
-  oscillator.type = model.oscillator.type
+  oscillator1.type = model.oscillator1Frequency.type
+  oscillator2.type = model.oscillator2Frequency.type
   filter.type = model.filterFrequency.type
   delay.delayTime.value = model.echo.length
   delayGain.gain.value = model.echo.sustain
 
   return {
-    oscillator: oscillator,
+    oscillator1: oscillator1,
+    oscillator2: oscillator2,
     oscillatorGain: oscillatorGain,
     filter: filter,
     delay: delay,
@@ -313,43 +331,49 @@ module.exports = function createAudioGraph (model) {
 }
 
 },{}],6:[function(require,module,exports){
-function modelBlock (additional) {
+function canvasFields () {
   var arr = new Array(128)
   for (var i = 0; i < 128; i++) {
     arr[i] = 128
   }
-  var block = {
+  return {
     data: arr,
     dataPos: 0,
     dataSpeed: 0.25
   }
-  additional = additional || {}
+}
+
+function extend (obj, additional) {
   for (var key in additional) {
     if (Object.prototype.hasOwnProperty.call(additional, key)) {
-      block[key] = additional[key]
+      obj[key] = additional[key]
     }
   }
-  return block
+  return obj
 }
 
 module.exports = function createModel () {
   return {
-    active: 'oscillator',
-    oscillator: modelBlock({
+    active: 'oscillator1Frequency',
+    oscillator1Frequency: extend({
       label: 'Frequency',
       type: 'triangle'
-    }),
-    gain: modelBlock({
+    }, canvasFields()),
+    oscillator2Frequency: extend({
+      label: 'Frequency',
+      type: 'triangle'
+    }, canvasFields()),
+    gain: extend({
       label: 'Gain'
-    }),
-    filterFrequency: modelBlock({
+    }, canvasFields()),
+    filterFrequency: extend({
       label: 'Filter frequency',
       type: 'allpass'
-    }),
-    filterQ: modelBlock({
+    }, canvasFields()),
+    filterQ: extend({
       label: 'Filter resonance',
       multiplier: 1
-    }),
+    }, canvasFields()),
     echo: {
       label: 'Echo',
       length: 0.1,

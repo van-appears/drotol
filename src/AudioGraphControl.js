@@ -6,7 +6,8 @@ function updateModelPosition (block) {
 }
 
 function updateModelPositions (model) {
-  updateModelPosition(model.oscillator)
+  updateModelPosition(model.oscillator1Frequency)
+  updateModelPosition(model.oscillator2Frequency)
   updateModelPosition(model.gain)
   updateModelPosition(model.filterFrequency)
   updateModelPosition(model.filterQ)
@@ -19,15 +20,20 @@ function getScaledValue (block) {
 function AudioGraphControl (audioGraph, model) {
   this.model = model
   this.audioGraph = audioGraph
-  this.lastOscillatorType = audioGraph.oscillator.type
+  this.lastOscillator1Type = audioGraph.oscillator1.type
+  this.lastOscillator2Type = audioGraph.oscillator2.type
   this.lastFilterType = audioGraph.filter.type
   this.lastEchoLength = audioGraph.delay.delayTime.value
 }
 
 AudioGraphControl.prototype.update = function () {
-  if (this.model.oscillator.type !== this.lastOscillatorType) {
-    this.lastOscillatorType = this.model.oscillator.type
-    this.audioGraph.oscillator.type = this.lastOscillatorType
+  if (this.model.oscillator1Frequency.type !== this.lastOscillator1Type) {
+    this.lastOscillator1Type = this.model.oscillator1Frequency.type
+    this.audioGraph.oscillator1.type = this.lastOscillator1Type
+  }
+  if (this.model.oscillator2Frequency.type !== this.lastOscillator2Type) {
+    this.lastOscillator2Type = this.model.oscillator2Frequency.type
+    this.audioGraph.oscillator2.type = this.lastOscillator2Type
   }
   if (this.model.filterFrequency.type !== this.lastFilterType) {
     this.lastFilterType = this.model.filterFrequency.type
@@ -41,8 +47,11 @@ AudioGraphControl.prototype.update = function () {
   updateModelPositions(this.model)
   this.audioGraph.delayGain.gain.value = this.model.echo.sustain
 
-  var frequency = 60 * Math.pow(8, getScaledValue(this.model.oscillator))
-  this.audioGraph.oscillator.frequency.value = frequency
+  var frequency1 = 60 * Math.pow(8, getScaledValue(this.model.oscillator1Frequency))
+  this.audioGraph.oscillator1.frequency.value = frequency1
+
+  var frequency2 = 60 * Math.pow(8, getScaledValue(this.model.oscillator2Frequency))
+  this.audioGraph.oscillator2.frequency.value = frequency2
 
   var gain = getScaledValue(this.model.gain)
   this.audioGraph.oscillatorGain.gain.value = gain

@@ -3,56 +3,58 @@ var filterType = document.querySelector('#filterType')
 var oscillatorType = document.querySelector('#oscillatorType')
 var echoLength = document.querySelector('#echoLength')
 var echoSustain = document.querySelector('#echoSustain')
-var model = {}
-var active = {}
 
-function radioClick (evt) {
-  var selected = evt.target.value
-  var what = document.querySelector('.what')
-  document.querySelector('body').className = 'selected_' + selected
+module.exports = function connectListeners (model) {
+  var active = model[model.active]
 
-  model.active = selected
-  active = model[selected]
-  if (active) {
-    speed.value = (Math.log(active.dataSpeed) / Math.log(2)) + 2
-    what.innerHTML = active.label
+  function radioClick (evt) {
+    var selected = evt.target.value
+    var what = document.querySelector('.what')
+    document.querySelector('body').className = 'selected_' + selected
+
+    model.active = selected
+    active = model[selected]
+    if (active) {
+      speed.value = (Math.log(active.dataSpeed) / Math.log(2)) + 2
+      what.innerHTML = active.label
+      if (selected === 'oscillator1Frequency') {
+        oscillatorType.value = model.oscillator1Frequency.type
+      } else if (selected === 'oscillator2Frequency') {
+        oscillatorType.value = model.oscillator2Frequency.type
+      }
+    }
   }
-}
 
-function speedChange (evt) {
-  active.dataSpeed = Math.pow(2, evt.target.value - 2)
-}
-
-function echoLengthChange (evt) {
-  active.length = evt.target.value
-}
-
-function echoSustainChange (evt) {
-  active.sustain = evt.target.value
-}
-
-function filterTypeChange (evt) {
-  var selected = evt.target.value
-  model.filterFrequency.type = selected
-  switch (selected) {
-    case 'notch':
-    case 'bandpass':
-      model.filterQ.multiplier = 30
-      model.filterQ.label = 'Filter bandwidth'
-      break
-    default:
-      model.filterQ.multiplier = 1
-      model.filterQ.label = 'Filter resonance'
+  function speedChange (evt) {
+    active.dataSpeed = Math.pow(2, evt.target.value - 2)
   }
-}
 
-function oscillatorTypeChange (evt) {
-  model.oscillator.type = evt.target.value
-}
+  function echoLengthChange (evt) {
+    active.length = evt.target.value
+  }
 
-module.exports = function connectListeners (_model) {
-  model = _model
-  active = model[model.active]
+  function echoSustainChange (evt) {
+    active.sustain = evt.target.value
+  }
+
+  function filterTypeChange (evt) {
+    var selected = evt.target.value
+    model.filterFrequency.type = selected
+    switch (selected) {
+      case 'notch':
+      case 'bandpass':
+        model.filterQ.multiplier = 30
+        model.filterQ.label = 'Filter bandwidth'
+        break
+      default:
+        model.filterQ.multiplier = 20
+        model.filterQ.label = 'Filter resonance'
+    }
+  }
+
+  function oscillatorTypeChange (evt) {
+    active.type = evt.target.value
+  }
 
   speed.value = active.dataSpeed
   speed.addEventListener('input', speedChange)
@@ -66,7 +68,7 @@ module.exports = function connectListeners (_model) {
   filterType.value = model.filterFrequency.type
   filterType.addEventListener('change', filterTypeChange)
 
-  oscillatorType.value = model.oscillator.type
+  oscillatorType.value = model.oscillator1Frequency.type
   oscillatorType.addEventListener('change', oscillatorTypeChange)
 
   var radios = document.querySelectorAll('input[name="box"]')

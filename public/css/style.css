@@ -1,135 +1,119 @@
 html, body {
-
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', 'Helvetica', sans-serif;
-    height: 100%;
-    width: 100%;
-    background: #efefef;
-
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', 'Helvetica', sans-serif;
+  height: 100%;
+  width: 100%;
+  background: #efefef;
 }
+
 body {
-
-    text-align: center;
-
+  text-align: center;
 }
+
 canvas {
-
-    box-shadow: 6px 6px 4px #bbbbbb;
-    margin: 0;
-    border: none;
-
+  box-shadow: 6px 6px 4px #bbbbbb;
+  margin: 0;
+  border: none;
 }
+
 select {
-
-    margin: 0;
-    width: 225px;
-
+  margin: 0;
+  width: 225px;
 }
+
 label {
-
-    font-family: 'Material Icons';
-    font-size: 24px;
-    vertical-align: middle;
-    background-color: white;
-    color: black;
-
+  font-family: 'Material Icons';
+  font-size: 24px;
+  vertical-align: middle;
+  background-color: white;
+  color: black;
 }
+
 .model label {
-
-    border-radius: 6px;
-    border-style: solid;
-    border-width: 1px;
-    border-color: black;
-    padding: 4px;
-    box-shadow: 6px 6px 4px #bbbbbb;
-
+  border-radius: 6px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: black;
+  padding: 4px;
+  box-shadow: 6px 6px 4px #bbbbbb;
 }
+
 input[ type='range' ] {
-
-    margin: 0;
-    width: 225px;
-    vertical-align: middle;
-
+  margin: 0;
+  width: 225px;
+  vertical-align: middle;
 }
+
 input[ type='radio' ] {
-
-    display: none;
-
+  display: none;
 }
+
 input[ type='radio' ]:checked + label {
-
-    background-color: black;
-    color: white;
-
+  background-color: black;
+  color: white;
 }
+
+label[ for='oscillator1' ] span,
+label[ for='oscillator2' ] span {
+  font-size: 8px;
+  font-family: 'Arial', 'Helvetica', sans-serif;
+}
+
 label[ for='filterQ' ] span {
-
-    display: inline-block;
-    transform: rotate(90deg) translateY(-1px);
-
+  display: inline-block;
+  transform: rotate(90deg) translateY(-1px);
 }
+
 label[ for='echoSustain' ] span {
-
-    display: inline-block;
-    transform: rotate(270deg);
-
+  display: inline-block;
+  transform: rotate(270deg);
 }
+
 .wrapper {
-
-    display: inline-block;
-    background: #ffffff;
-    width: 300px;
-    padding: 20px;
-
+  display: inline-block;
+  background: #ffffff;
+  width: 300px;
+  padding: 20px;
 }
+
 .what {
-
-    margin: 10px 0;
-
+  margin: 10px 0;
 }
+
 .lineControls {
-
-    display: block;
-
+  display: block;
 }
+
 .echoControls {
-
    display: none;
-
 }
+
 .selected_echo .echoControls {
-
-    display: block;
-
+  display: block;
 }
+
 .selected_echo .lineControls {
-
-    display: none;
-
+  display: none;
 }
+
 .selected_echo canvas {
-
-    display: none;
-
+  display: none;
 }
+
 .oscillatorControls {
-
-    display: none;
-
+  display: none;
 }
-.selected_oscillator .oscillatorControls {
 
-    display: block;
-
+.selected_oscillator1Frequency .oscillatorControls,
+.selected_oscillator2Frequency .oscillatorControls {
+  display: block;
 }
+
 .filterControls {
-
-    display: none;
-
+  display: none;
 }
+
 .selected_filterFrequency .filterControls {
-
-    display: block;
-
+  display: block;
 }
