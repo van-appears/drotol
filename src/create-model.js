@@ -44,7 +44,8 @@ module.exports = function createModel () {
     echo: {
       label: 'Echo',
       length: 0.1,
-      sustain: 0.5
+      sustain: 0.5,
+      enabled: true
     }
   }
 }

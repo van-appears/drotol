@@ -1,6 +1,7 @@
 var speed = document.querySelector('#speed')
 var filterType = document.querySelector('#filterType')
 var oscillatorType = document.querySelector('#oscillatorType')
+var echoEnabled = document.querySelector('#echoOnOff')
 var echoLength = document.querySelector('#echoLength')
 var echoSustain = document.querySelector('#echoSustain')
 
@@ -37,6 +38,10 @@ module.exports = function connectListeners (model) {
     active.sustain = evt.target.value
   }
 
+  function echoEnabledChange (evt) {
+    active.enabled = evt.target.checked
+  }
+
   function filterTypeChange (evt) {
     var selected = evt.target.value
     model.filterFrequency.type = selected
@@ -70,6 +75,9 @@ module.exports = function connectListeners (model) {
 
   oscillatorType.value = model.oscillator1Frequency.type
   oscillatorType.addEventListener('change', oscillatorTypeChange)
+
+  echoEnabled.checked = model.echo.enabled
+  echoEnabled.addEventListener('change', echoEnabledChange)
 
   var radios = document.querySelectorAll('input[name="box"]')
   for (var i = 0; i < radios.length; i++) {

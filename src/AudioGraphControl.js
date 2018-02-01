@@ -45,7 +45,9 @@ AudioGraphControl.prototype.update = function () {
   }
 
   updateModelPositions(this.model)
-  this.audioGraph.delayGain.gain.value = this.model.echo.sustain
+  this.audioGraph.delayGain.gain.value = this.model.echo.enabled
+    ? this.model.echo.sustain
+    : 0
 
   var frequency1 = 60 * Math.pow(8, getScaledValue(this.model.oscillator1Frequency))
   this.audioGraph.oscillator1.frequency.value = frequency1

@@ -41,6 +41,7 @@ label {
 
 input[ type='range' ] {
   margin: 0;
+  padding: 0;
   width: 225px;
   vertical-align: middle;
 }
@@ -52,6 +53,13 @@ input[ type='radio' ] {
 input[ type='radio' ]:checked + label {
   background-color: black;
   color: white;
+}
+
+input[ type='checkbox' ] {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  width: 15px;
 }
 
 label[ for='oscillator1' ] span,
@@ -67,7 +75,7 @@ label[ for='filterQ' ] span {
 
 label[ for='echoSustain' ] span {
   display: inline-block;
-  transform: rotate(270deg);
+  transform: rotate(90deg) scaleX(-1);
 }
 
 .wrapper {
@@ -79,6 +87,11 @@ label[ for='echoSustain' ] span {
 
 .what {
   margin: 10px 0;
+}
+
+.spacer {
+  display: inline-block;
+  width: 210px;
 }
 
 .lineControls {
