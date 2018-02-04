@@ -16,7 +16,8 @@ const server = http.createServer((req, res) => {
       : fs.readFileSync(publicDir + req.url)
     res.end(content)
   } catch (err) {
-    res.send(404)
+    res.writeHead(404)
+    res.end()
   }
 })
 
