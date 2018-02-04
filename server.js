@@ -12,7 +12,7 @@ const port = process.argv.length === 3
 const server = http.createServer((req, res) => {
   try {
     const content = req.url === '/'
-      ? fs.readFileSync(publicDir + '/index.html')
+      ? fs.readFileSync(publicDir + '/drotol.html')
       : fs.readFileSync(publicDir + req.url)
     res.end(content)
   } catch (err) {
