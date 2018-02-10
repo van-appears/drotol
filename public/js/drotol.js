@@ -27,6 +27,11 @@ function AudioGraphControl (audioGraph, model) {
   this.lastEchoLength = audioGraph.delay.delayTime.value
 }
 
+AudioGraphControl.prototype.start = function () {
+  this.audioGraph.oscillator1.start()
+  this.audioGraph.oscillator2.start()
+}
+
 AudioGraphControl.prototype.update = function () {
   if (this.model.oscillator1Frequency.type !== this.lastOscillator1Type) {
     this.lastOscillator1Type = this.model.oscillator1Frequency.type
@@ -204,6 +209,7 @@ window.onload = function () {
   var canvasControl = new CanvasControl(model)
   initialiseValues(audioGraph, model)
   connectListeners(model)
+  graphControl.start()
 
   var flop = false
   setInterval(function () {
@@ -311,8 +317,6 @@ filter.connect(delay)
 delay.connect(delayGain)
 delayGain.connect(audioCtx.destination)
 delayGain.connect(delay)
-oscillator1.start()
-oscillator2.start()
 
 module.exports = function createAudioGraph () {
   return {

@@ -26,6 +26,11 @@ function AudioGraphControl (audioGraph, model) {
   this.lastEchoLength = audioGraph.delay.delayTime.value
 }
 
+AudioGraphControl.prototype.start = function () {
+  this.audioGraph.oscillator1.start()
+  this.audioGraph.oscillator2.start()
+}
+
 AudioGraphControl.prototype.update = function () {
   if (this.model.oscillator1Frequency.type !== this.lastOscillator1Type) {
     this.lastOscillator1Type = this.model.oscillator1Frequency.type

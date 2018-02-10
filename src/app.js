@@ -12,6 +12,7 @@ window.onload = function () {
   var canvasControl = new CanvasControl(model)
   initialiseValues(audioGraph, model)
   connectListeners(model)
+  graphControl.start()
 
   var flop = false
   setInterval(function () {

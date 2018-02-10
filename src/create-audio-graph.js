@@ -17,8 +17,6 @@ filter.connect(delay)
 delay.connect(delayGain)
 delayGain.connect(audioCtx.destination)
 delayGain.connect(delay)
-oscillator1.start()
-oscillator2.start()
 
 module.exports = function createAudioGraph () {
   return {
