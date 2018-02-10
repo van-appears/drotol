@@ -20,13 +20,7 @@ delayGain.connect(delay)
 oscillator1.start()
 oscillator2.start()
 
-module.exports = function createAudioGraph (model) {
-  oscillator1.type = model.oscillator1Frequency.type
-  oscillator2.type = model.oscillator2Frequency.type
-  filter.type = model.filterFrequency.type
-  delay.delayTime.value = model.echo.length
-  delayGain.gain.value = model.echo.sustain
-
+module.exports = function createAudioGraph () {
   return {
     oscillator1: oscillator1,
     oscillator2: oscillator2,

@@ -190,53 +190,56 @@ CanvasControl.prototype.mouseMove = function (mouseEvt) {
 module.exports = CanvasControl
 
 },{}],3:[function(require,module,exports){
-var createModel = require('./create-model')
-var createAudioGraph = require('./create-audio-graph')
-var AudioGraphControl = require('./AudioGraphControl')
-var CanvasControl = require('./CanvasControl')
-var connectListeners = require('./connect-listeners')
+window.onload = function () {
+  var createModel = require('./create-model')
+  var createAudioGraph = require('./create-audio-graph')
+  var AudioGraphControl = require('./AudioGraphControl')
+  var CanvasControl = require('./CanvasControl')
+  var connectListeners = require('./connect-listeners')
+  var initialiseValues = require('./initialise-values')
 
-var model = createModel()
-var audioGraph = createAudioGraph(model)
-var graphControl = new AudioGraphControl(audioGraph, model)
-var canvasControl = new CanvasControl(model)
-connectListeners(model)
+  var model = createModel()
+  var audioGraph = createAudioGraph()
+  var graphControl = new AudioGraphControl(audioGraph, model)
+  var canvasControl = new CanvasControl(model)
+  initialiseValues(audioGraph, model)
+  connectListeners(model)
 
-var flop = false
-setInterval(function () {
-  graphControl.update()
-  if (flop) {
-    canvasControl.update()
-  }
-  flop = !flop
-}, 20)
+  var flop = false
+  setInterval(function () {
+    graphControl.update()
+    if (flop) {
+      canvasControl.update()
+    }
+    flop = !flop
+  }, 20)
+}
 
-},{"./AudioGraphControl":1,"./CanvasControl":2,"./connect-listeners":4,"./create-audio-graph":5,"./create-model":6}],4:[function(require,module,exports){
-var speed = document.querySelector('#speed')
-var filterType = document.querySelector('#filterType')
-var oscillatorType = document.querySelector('#oscillatorType')
-var echoEnabled = document.querySelector('#echoOnOff')
-var echoLength = document.querySelector('#echoLength')
-var echoSustain = document.querySelector('#echoSustain')
-
+},{"./AudioGraphControl":1,"./CanvasControl":2,"./connect-listeners":4,"./create-audio-graph":5,"./create-model":6,"./initialise-values":7}],4:[function(require,module,exports){
 module.exports = function connectListeners (model) {
   var active = model[model.active]
+  var radios = document.querySelectorAll('input[name="box"]')
+  var speed = document.querySelector('#speed')
+  var filterType = document.querySelector('#filterType')
+  var oscillatorType = document.querySelector('#oscillatorType')
+  var echoEnabled = document.querySelector('#echoOnOff')
+  var echoLength = document.querySelector('#echoLength')
+  var echoSustain = document.querySelector('#echoSustain')
+  var activeControlLabel = document.querySelector('.what')
+  var body = document.querySelector('body')
 
   function radioClick (evt) {
     var selected = evt.target.value
-    var what = document.querySelector('.what')
-    document.querySelector('body').className = 'selected_' + selected
-
+    body.className = 'selected_' + selected
     model.active = selected
     active = model[selected]
-    if (active) {
-      speed.value = (Math.log(active.dataSpeed) / Math.log(2)) + 2
-      what.innerHTML = active.label
-      if (selected === 'oscillator1Frequency') {
-        oscillatorType.value = model.oscillator1Frequency.type
-      } else if (selected === 'oscillator2Frequency') {
-        oscillatorType.value = model.oscillator2Frequency.type
-      }
+
+    speed.value = (Math.log(active.dataSpeed) / Math.log(2)) + 2
+    activeControlLabel.innerHTML = active.label
+    if (selected === 'oscillator1Frequency') {
+      oscillatorType.value = model.oscillator1Frequency.type
+    } else if (selected === 'oscillator2Frequency') {
+      oscillatorType.value = model.oscillator2Frequency.type
     }
   }
 
@@ -275,25 +278,13 @@ module.exports = function connectListeners (model) {
     active.type = evt.target.value
   }
 
-  speed.value = active.dataSpeed
   speed.addEventListener('input', speedChange)
-
-  echoLength.value = model.echo.length
   echoLength.addEventListener('change', echoLengthChange)
-
-  echoSustain.value = model.echo.sustain
   echoSustain.addEventListener('input', echoSustainChange)
-
-  filterType.value = model.filterFrequency.type
   filterType.addEventListener('change', filterTypeChange)
-
-  oscillatorType.value = model.oscillator1Frequency.type
   oscillatorType.addEventListener('change', oscillatorTypeChange)
-
-  echoEnabled.checked = model.echo.enabled
   echoEnabled.addEventListener('change', echoEnabledChange)
 
-  var radios = document.querySelectorAll('input[name="box"]')
   for (var i = 0; i < radios.length; i++) {
     radios[i].onclick = radioClick
   }
@@ -323,13 +314,7 @@ delayGain.connect(delay)
 oscillator1.start()
 oscillator2.start()
 
-module.exports = function createAudioGraph (model) {
-  oscillator1.type = model.oscillator1Frequency.type
-  oscillator2.type = model.oscillator2Frequency.type
-  filter.type = model.filterFrequency.type
-  delay.delayTime.value = model.echo.length
-  delayGain.gain.value = model.echo.sustain
-
+module.exports = function createAudioGraph () {
   return {
     oscillator1: oscillator1,
     oscillator2: oscillator2,
@@ -391,6 +376,27 @@ module.exports = function createModel () {
       enabled: true
     }
   }
+}
+
+},{}],7:[function(require,module,exports){
+module.exports = function initialiseValues (audioGraph, model) {
+  audioGraph.oscillator1.type = model.oscillator1Frequency.type
+  audioGraph.oscillator2.type = model.oscillator2Frequency.type
+
+  var filterType = document.querySelector('#filterType')
+  filterType.value = model.filterFrequency.type
+  audioGraph.filter.type = model.filterFrequency.type
+
+  var echoEnabled = document.querySelector('#echoOnOff')
+  echoEnabled.checked = model.echo.enabled
+
+  var echoLength = document.querySelector('#echoLength')
+  echoLength.value = model.echo.length
+  audioGraph.delay.delayTime.value = model.echo.length
+
+  var echoSustain = document.querySelector('#echoSustain')
+  echoSustain.value = model.echo.sustain
+  audioGraph.delayGain.gain.value = model.echo.sustain
 }
 
 },{}]},{},[3]);
