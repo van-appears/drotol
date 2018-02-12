@@ -1,11 +1,11 @@
-window.onload = function () {
-  var createModel = require('./create-model')
-  var createAudioGraph = require('./create-audio-graph')
-  var AudioGraphControl = require('./AudioGraphControl')
-  var CanvasControl = require('./CanvasControl')
-  var connectListeners = require('./connect-listeners')
-  var initialiseValues = require('./initialise-values')
+var createModel = require('./create-model')
+var createAudioGraph = require('./create-audio-graph')
+var AudioGraphControl = require('./AudioGraphControl')
+var CanvasControl = require('./CanvasControl')
+var connectListeners = require('./connect-listeners')
+var initialiseValues = require('./initialise-values')
 
+function start () {
   var model = createModel()
   var audioGraph = createAudioGraph()
   var graphControl = new AudioGraphControl(audioGraph, model)
@@ -23,3 +23,12 @@ window.onload = function () {
     flop = !flop
   }, 20)
 }
+
+WebFont.load({
+  google: {
+    families: ['Material Icons']
+  },
+  active: function () {
+    start()
+  }
+})

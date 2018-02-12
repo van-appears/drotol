@@ -195,14 +195,14 @@ CanvasControl.prototype.mouseMove = function (mouseEvt) {
 module.exports = CanvasControl
 
 },{}],3:[function(require,module,exports){
-window.onload = function () {
-  var createModel = require('./create-model')
-  var createAudioGraph = require('./create-audio-graph')
-  var AudioGraphControl = require('./AudioGraphControl')
-  var CanvasControl = require('./CanvasControl')
-  var connectListeners = require('./connect-listeners')
-  var initialiseValues = require('./initialise-values')
+var createModel = require('./create-model')
+var createAudioGraph = require('./create-audio-graph')
+var AudioGraphControl = require('./AudioGraphControl')
+var CanvasControl = require('./CanvasControl')
+var connectListeners = require('./connect-listeners')
+var initialiseValues = require('./initialise-values')
 
+function start () {
   var model = createModel()
   var audioGraph = createAudioGraph()
   var graphControl = new AudioGraphControl(audioGraph, model)
@@ -220,6 +220,16 @@ window.onload = function () {
     flop = !flop
   }, 20)
 }
+
+WebFont.load({
+  google: {
+    families: ['Material Icons']
+  },
+  active: function () {
+    console.log("IS THIS FUCKER BEING CALLED?");
+    start()
+  }
+})
 
 },{"./AudioGraphControl":1,"./CanvasControl":2,"./connect-listeners":4,"./create-audio-graph":5,"./create-model":6,"./initialise-values":7}],4:[function(require,module,exports){
 module.exports = function connectListeners (model) {

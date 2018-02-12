@@ -128,3 +128,13 @@ label[ for='echoSustain' ] span {
 .selected_filterFrequency .filterControls {
   display: block;
 }
+
+.wf-loading .wrapper {
+  display: none;
+}
+.loading {
+  display: none;
+}
+.wf-loading .loading {
+  display: block;
+}

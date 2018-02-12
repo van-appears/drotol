@@ -1,63 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8"/>
-        <link href="css/drotol.css" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-        <script src="js/drotol.js" defer></script>
-        <title>Drotol</title>
-    </head>
-    <body>
-        <div class="wrapper">
-            <div class="model">
-                <input id="oscillator1" type="radio" name="box" value="oscillator1Frequency"/>
-                <label for="oscillator1" title="Frequency 1">&#xE405;<span>1</span></label>
-                <input id="oscillator2" type="radio" name="box" value="oscillator2Frequency"/>
-                <label for="oscillator2" title="Frequency 2">&#xE405;<span>2</span></label>
-                <input id="gain" type="radio" name="box" value="gain"/>
-                <label for="gain" title="Gain">&#xE050;</label>
-                <input id="filterFrequency" type="radio" name="box" value="filterFrequency"/>
-                <label for="filterFrequency" title="Filter Cutoff">&#xE1B8;</label>
-                <input id="filterQ" type="radio" name="box" value="filterQ"/>
-                <label for="filterQ" title="Filter Q"><span>&#xE80D;</span></label>
-                <input id="echo" type="radio" name="box" value="echo"/>
-                <label for="echo" title="Echo">&#xE040;</label>
-            </div>
-            <div class="what">Drotol</div>
-            <canvas id="draw" width="255" height="255"></canvas>
-            <div class="lineControls">
-                <label for="speed" title="Speed">&#xE01F;</label>
-                <input id="speed" type="range" min="-1" max="1" step="any" value="0"/>
-            </div>
-            <div class="echoControls">
-                <label for="echoOnOff" title="Echo On/Off">&#xE040;</label>
-                <input id="echoOnOff" type="checkbox"/><span class="spacer"></span>
-                <br/>
-                <label for="echoLength" title="Echo length">&#xE8AE;</label>
-                <input id="echoLength" type="range" min="0.01" max="1" step="any" value="0.1"/>
-                <br/>
-                <label for="echoSustain" title="Speed"><span>&#xE164;</span></label>
-                <input id="echoSustain" type="range" min="0.05" max="0.95" step="any" value="0.5"/>
-            </div>
-            <div class="oscillatorControls">
-                <label for="oscillatorType">&#xE8B8;</label>
-                <select id="oscillatorType" title="Oscillator Type">
-                    <option value="sawtooth" selected>Sawtooth</option>
-                    <option value="sine">Sine</option>
-                    <option value="square">Square</option>
-                    <option value="triangle">Triangle</option>
-                </select>
-            </div>
-            <div class="filterControls">
-                <label for="filterType">&#xE8B8;</label>
-                <select id="filterType" title="Filter Type">
-                    <option value="allpass">None</option>
-                    <option value="bandpass">Band pass</option>
-                    <option value="highpass">High pass</option>
-                    <option value="lowpass">Low pass</option>
-                    <option value="notch">Notch</option>
-                </select>
-            </div>
-        </div>
-    </body>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Drotol</title>
+    <link href="css/drotol.css" rel="stylesheet"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
+    <script src="js/drotol.js" defer></script>
+  </head>
+  <body>
+    <div class="loading">Loading...</div>
+    <div class="wrapper">
+      <div class="model">
+        <input id="oscillator1" type="radio" name="box" value="oscillator1Frequency"/>
+        <label for="oscillator1" title="Frequency 1">&#xE405;<span>1</span></label>
+        <input id="oscillator2" type="radio" name="box" value="oscillator2Frequency"/>
+        <label for="oscillator2" title="Frequency 2">&#xE405;<span>2</span></label>
+        <input id="gain" type="radio" name="box" value="gain"/>
+        <label for="gain" title="Gain">&#xE050;</label>
+        <input id="filterFrequency" type="radio" name="box" value="filterFrequency"/>
+        <label for="filterFrequency" title="Filter Cutoff">&#xE1B8;</label>
+        <input id="filterQ" type="radio" name="box" value="filterQ"/>
+        <label for="filterQ" title="Filter Q"><span>&#xE80D;</span></label>
+        <input id="echo" type="radio" name="box" value="echo"/>
+        <label for="echo" title="Echo">&#xE040;</label>
+      </div>
+      <div class="what">Drotol</div>
+      <canvas id="draw" width="255" height="255"></canvas>
+      <div class="lineControls">
+        <label for="speed" title="Speed">&#xE01F;</label>
+        <input id="speed" type="range" min="-1" max="1" step="any" value="0"/>
+      </div>
+      <div class="echoControls">
+        <label for="echoOnOff" title="Echo On/Off">&#xE040;</label>
+        <input id="echoOnOff" type="checkbox"/><span class="spacer"></span>
+        <br/>
+        <label for="echoLength" title="Echo length">&#xE8AE;</label>
+        <input id="echoLength" type="range" min="0.01" max="1" step="any" value="0.1"/>
+        <br/>
+        <label for="echoSustain" title="Speed"><span>&#xE164;</span></label>
+        <input id="echoSustain" type="range" min="0.05" max="0.95" step="any" value="0.5"/>
+      </div>
+      <div class="oscillatorControls">
+        <label for="oscillatorType">&#xE8B8;</label>
+        <select id="oscillatorType" title="Oscillator Type">
+          <option value="sawtooth" selected>Sawtooth</option>
+          <option value="sine">Sine</option>
+          <option value="square">Square</option>
+          <option value="triangle">Triangle</option>
+        </select>
+      </div>
+      <div class="filterControls">
+        <label for="filterType">&#xE8B8;</label>
+        <select id="filterType" title="Filter Type">
+          <option value="allpass">None</option>
+          <option value="bandpass">Band pass</option>
+          <option value="highpass">High pass</option>
+          <option value="lowpass">Low pass</option>
+          <option value="notch">Notch</option>
+        </select>
+      </div>
+    </div>
+  </body>
 </html>
