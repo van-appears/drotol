@@ -16,100 +16,112 @@ canvas {
   border: none;
 }
 
-select {
-  margin: 0;
-  width: 225px;
+input[ type='radio' ],
+input[ type='checkbox' ] {
+  display: none;
 }
 
-label {
-  font-family: 'Material Icons';
-  font-size: 24px;
-  vertical-align: middle;
-  background-color: white;
-  color: black;
-}
-
-.model label {
-  border-radius: 6px;
+input[ type='radio' ] + label,
+input[ type='checkbox' ] + label {
+  border-radius: 3px;
   border-style: solid;
   border-width: 1px;
   border-color: black;
-  padding: 4px;
 }
 
 input[ type='range' ] {
   margin: 0;
   padding: 0;
-  width: 225px;
-  vertical-align: middle;
+  width: 220px;
+  height: 32px;
 }
 
-input[ type='radio' ] {
-  display: none;
-}
-
-input[ type='radio' ]:checked + label {
-  background-color: black;
-  color: white;
-}
-
-input[ type='checkbox' ] {
-  border: 0;
-  margin: 0;
-  padding: 0;
-  width: 15px;
-}
-
-label[ for='oscillator1' ] span,
-label[ for='oscillator2' ] span {
-  font-size: 8px;
-  font-family: 'Arial', 'Helvetica', sans-serif;
-}
-
-label[ for='filterQ' ] span {
+label {
   display: inline-block;
-  transform: rotate(90deg) translateY(-1px);
+  cursor: pointer;
+  outline: 0;
+  width: 32px;
+  height: 32px;
+  text-indent: -99999px;
+  background-image: url(../img/icons.png);
+  background-repeat: no-repeat;
 }
 
-label[ for='echoSustain' ] span {
-  display: inline-block;
-  transform: rotate(90deg) scaleX(-1);
+label[ for='oscillator1' ] {
+  background-position: 0 0;
 }
 
-.wrapper {
-  display: inline-block;
-  background: #ffffff;
-  width: 300px;
-  padding: 20px;
+label[ for='oscillator2' ] {
+  background-position: -32px 0;
 }
 
-.what {
-  margin: 10px 0;
+label[ for='gain' ] {
+  background-position: -64px 0;
 }
 
-.spacer {
-  display: inline-block;
-  width: 210px;
+label[ for='filterFrequency' ] {
+  background-position: -96px 0;
 }
 
-.lineControls {
-  display: block;
+label[ for='filterQ' ] {
+  background-position: -128px 0;
 }
 
-.echoControls {
-   display: none;
+label[ for='echo' ] {
+  background-position: -160px 0;
 }
 
-.selected_echo .echoControls {
-  display: block;
+label[ for='sine' ] {
+  background-position: -192px 0;
 }
 
-.selected_echo .lineControls {
-  display: none;
+label[ for='sawtooth' ] {
+  background-position: -224px 0;
 }
 
-.selected_echo canvas {
-  display: none;
+label[ for='triangle' ] {
+  background-position: -256px 0;
+}
+
+label[ for='square' ] {
+  background-position: -288px 0;
+}
+
+label[ for='allpass' ] {
+  background-position: -320px 0;
+}
+
+label[ for='highpass' ] {
+  background-position: -352px 0;
+}
+
+label[ for='lowpass' ] {
+  background-position: -384px 0;
+}
+
+label[ for='bandpass' ] {
+  background-position: -416px 0;
+}
+
+label[ for='speed' ] {
+  background-position: -448px 0;
+}
+
+label[ for='echoOnOff' ] {
+  background-position: -544px 0;
+}
+
+label[ for='echoLength' ] {
+  background-position: -512px 0;
+}
+
+label[ for='echoSustain' ] {
+  background-position: -512px -32px;
+}
+
+input[ type='radio' ]:checked + label,
+input[ type='checkbox' ]:checked + label {
+  background-position-y: -32px;
 }
 
 .oscillatorControls {
@@ -129,12 +141,33 @@ label[ for='echoSustain' ] span {
   display: block;
 }
 
-.wf-loading .wrapper {
-  display: none;
+.echoControls {
+   display: none;
 }
-.loading {
-  display: none;
-}
-.wf-loading .loading {
+
+.selected_echo .echoControls {
   display: block;
+}
+
+.selected_echo .lineControls {
+  display: none;
+}
+
+.selected_echo canvas {
+  display: none;
+}
+
+.wrapper {
+  display: inline-block;
+  background: #ffffff;
+  width: 300px;
+  padding: 20px;
+}
+
+.model {
+  height: 34px;
+}
+
+.what {
+  margin: 10px 0;
 }

@@ -202,47 +202,42 @@ var CanvasControl = require('./CanvasControl')
 var connectListeners = require('./connect-listeners')
 var initialiseValues = require('./initialise-values')
 
-function start () {
-  var model = createModel()
-  var audioGraph = createAudioGraph()
-  var graphControl = new AudioGraphControl(audioGraph, model)
-  var canvasControl = new CanvasControl(model)
-  initialiseValues(audioGraph, model)
-  connectListeners(model)
-  graphControl.start()
+var model = createModel()
+var audioGraph = createAudioGraph()
+var graphControl = new AudioGraphControl(audioGraph, model)
+var canvasControl = new CanvasControl(model)
+initialiseValues(audioGraph, model)
+connectListeners(model)
+graphControl.start()
 
-  var flop = false
-  setInterval(function () {
-    graphControl.update()
-    if (flop) {
-      canvasControl.update()
-    }
-    flop = !flop
-  }, 20)
-}
-
-WebFont.load({
-  google: {
-    families: ['Material Icons']
-  },
-  active: function () {
-    console.log("IS THIS FUCKER BEING CALLED?");
-    start()
+var flop = false
+setInterval(function () {
+  graphControl.update()
+  if (flop) {
+    canvasControl.update()
   }
-})
+  flop = !flop
+}, 20)
 
 },{"./AudioGraphControl":1,"./CanvasControl":2,"./connect-listeners":4,"./create-audio-graph":5,"./create-model":6,"./initialise-values":7}],4:[function(require,module,exports){
 module.exports = function connectListeners (model) {
   var active = model[model.active]
-  var radios = document.querySelectorAll('input[name="box"]')
   var speed = document.querySelector('#speed')
   var filterType = document.querySelector('#filterType')
-  var oscillatorType = document.querySelector('#oscillatorType')
   var echoEnabled = document.querySelector('#echoOnOff')
   var echoLength = document.querySelector('#echoLength')
   var echoSustain = document.querySelector('#echoSustain')
   var activeControlLabel = document.querySelector('.what')
   var body = document.querySelector('body')
+
+  function setLabel(label, attr) {
+    activeControlLabel.innerHTML = label
+  }
+
+  function selectOscillatorType(type) {
+    document.querySelector(
+      'input[name="oscillatorType"][value="' + type + '"]').click();
+  }
 
   function radioClick (evt) {
     var selected = evt.target.value
@@ -250,12 +245,12 @@ module.exports = function connectListeners (model) {
     model.active = selected
     active = model[selected]
 
+    setLabel(active.label, active.type)
     speed.value = (Math.log(active.dataSpeed) / Math.log(2)) + 2
-    activeControlLabel.innerHTML = active.label
     if (selected === 'oscillator1Frequency') {
-      oscillatorType.value = model.oscillator1Frequency.type
+      selectOscillatorType(model.oscillator1Frequency.type)
     } else if (selected === 'oscillator2Frequency') {
-      oscillatorType.value = model.oscillator2Frequency.type
+      selectOscillatorType(model.oscillator2Frequency.type)
     }
   }
 
@@ -278,6 +273,8 @@ module.exports = function connectListeners (model) {
   function filterTypeChange (evt) {
     var selected = evt.target.value
     model.filterFrequency.type = selected
+    setLabel(active.label, model.filterFrequency.type)
+
     switch (selected) {
       case 'notch':
       case 'bandpass':
@@ -297,14 +294,25 @@ module.exports = function connectListeners (model) {
   speed.addEventListener('input', speedChange)
   echoLength.addEventListener('change', echoLengthChange)
   echoSustain.addEventListener('input', echoSustainChange)
-  filterType.addEventListener('change', filterTypeChange)
-  oscillatorType.addEventListener('change', oscillatorTypeChange)
   echoEnabled.addEventListener('change', echoEnabledChange)
 
+  var radios = document.querySelectorAll('input[name="box"]')
   for (var i = 0; i < radios.length; i++) {
     radios[i].onclick = radioClick
   }
   radios[0].click()
+
+  var filterTypeRadios = document.querySelectorAll('input[name="filterType"]')
+  for (var i = 0; i < filterTypeRadios.length; i++) {
+    filterTypeRadios[i].onclick = filterTypeChange
+  }
+  filterTypeRadios[0].click()
+
+  var oscillatorTypeRadios= document.querySelectorAll('input[name="oscillatorType"]')
+  for (var i = 0; i < oscillatorTypeRadios.length; i++) {
+    oscillatorTypeRadios[i].onclick = oscillatorTypeChange
+  }
+  oscillatorTypeRadios[0].click()
 }
 
 },{}],5:[function(require,module,exports){
@@ -396,10 +404,6 @@ module.exports = function createModel () {
 module.exports = function initialiseValues (audioGraph, model) {
   audioGraph.oscillator1.type = model.oscillator1Frequency.type
   audioGraph.oscillator2.type = model.oscillator2Frequency.type
-
-  var filterType = document.querySelector('#filterType')
-  filterType.value = model.filterFrequency.type
-  audioGraph.filter.type = model.filterFrequency.type
 
   var echoEnabled = document.querySelector('#echoOnOff')
   echoEnabled.checked = model.echo.enabled

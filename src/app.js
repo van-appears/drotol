@@ -5,30 +5,19 @@ var CanvasControl = require('./CanvasControl')
 var connectListeners = require('./connect-listeners')
 var initialiseValues = require('./initialise-values')
 
-function start () {
-  var model = createModel()
-  var audioGraph = createAudioGraph()
-  var graphControl = new AudioGraphControl(audioGraph, model)
-  var canvasControl = new CanvasControl(model)
-  initialiseValues(audioGraph, model)
-  connectListeners(model)
-  graphControl.start()
+var model = createModel()
+var audioGraph = createAudioGraph()
+var graphControl = new AudioGraphControl(audioGraph, model)
+var canvasControl = new CanvasControl(model)
+initialiseValues(audioGraph, model)
+connectListeners(model)
+graphControl.start()
 
-  var flop = false
-  setInterval(function () {
-    graphControl.update()
-    if (flop) {
-      canvasControl.update()
-    }
-    flop = !flop
-  }, 20)
-}
-
-WebFont.load({
-  google: {
-    families: ['Material Icons']
-  },
-  active: function () {
-    start()
+var flop = false
+setInterval(function () {
+  graphControl.update()
+  if (flop) {
+    canvasControl.update()
   }
-})
+  flop = !flop
+}, 20)
