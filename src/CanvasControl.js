@@ -56,8 +56,18 @@ function setRange (data, startX, startY, endX, endY) {
   }
 }
 
-function asX (mouseEvt) {
-  return Math.floor((mouseEvt.pageX - canvasLeft) / 2)
+function asX (evt) {
+  var useEvent = evt.changedTouches
+    ? evt.changedTouches[ 0 ]
+    : evt
+  return Math.floor((useEvent.pageX - canvasLeft) / 2)
+}
+
+function asY (evt) {
+  var useEvent = evt.changedTouches
+    ? evt.changedTouches[ 0 ]
+    : evt
+  return useEvent.pageY - canvasTop
 }
 
 function CanvasControl (model) {
@@ -66,6 +76,10 @@ function CanvasControl (model) {
   canvas.addEventListener('mousemove', this.mouseMove.bind(this))
   canvas.addEventListener('mouseout', this.mouseUp.bind(this))
   canvas.addEventListener('mouseup', this.mouseUp.bind(this))
+  canvas.addEventListener('touchstart', this.mouseDown.bind(this))
+  canvas.addEventListener('touchmove', this.mouseMove.bind(this))
+  canvas.addEventListener('touchend', this.mouseUp.bind(this))
+  canvas.addEventListener('touchcancel', this.mouseUp.bind(this))
 }
 
 CanvasControl.prototype.update = function () {
@@ -81,7 +95,7 @@ CanvasControl.prototype.update = function () {
 CanvasControl.prototype.mouseDown = function (mouseEvt) {
   if (!this.data) return
   lastX = asX(mouseEvt)
-  lastY = mouseEvt.pageY - canvasTop
+  lastY = asY(mouseEvt)
   this.data[ lastX ] = lastY
   isStarted = true
 }
@@ -107,7 +121,7 @@ CanvasControl.prototype.mouseMove = function (mouseEvt) {
   }
   if (isStarted) {
     var toX = asX(mouseEvt)
-    var toY = mouseEvt.pageY - canvasTop
+    var toY = asY(mouseEvt)
     setRange(this.data, lastX, lastY, toX, toY)
     this.updated = true
     isDragging = true
