@@ -82,12 +82,11 @@ var lastX = 0
 var lastY = 0
 var isStarted = false
 var isDragging = false
+context.lineWidth = 1.0
 
 function resetCanvas () {
-  context.fillStyle = '#e6e6e6'
-  context.fillRect(0, 0, 255, 255)
+  context.clearRect(0, 0, 255, 255)
   context.beginPath()
-  context.lineWidth = 1.0
   context.strokeStyle = '#ddd'
   context.moveTo(0, 128)
   context.lineTo(255, 128)
@@ -98,11 +97,12 @@ function resetCanvas () {
 function renderData (data) {
   context.beginPath()
   context.strokeStyle = '#999'
-  for (let i = 0; i < 128; i++) {
-    const v1 = data[i]
-    const v2 = data[i + 1]
-    context.moveTo(i * 2, v1)
-    context.lineTo((i + 1) * 2, v2)
+  let v1 = data[0]
+  context.moveTo(0, v1)
+  for (let i = 1; i < 128; i++) {
+    const v2 = data[i]
+    context.lineTo(i * 2, v2)
+    v1 = v2
   }
   context.stroke()
   context.closePath()
@@ -224,14 +224,10 @@ initialiseValues(audioGraph, model)
 connectListeners(model)
 graphControl.start()
 
-var flop = false
 setInterval(function () {
   graphControl.update()
-  if (flop) {
-    canvasControl.update()
-  }
-  flop = !flop
-}, 20)
+  canvasControl.update()
+}, 40)
 
 },{"./AudioGraphControl":1,"./CanvasControl":2,"./connect-listeners":4,"./create-audio-graph":5,"./create-model":6,"./initialise-values":7}],4:[function(require,module,exports){
 module.exports = function connectListeners (model) {
@@ -260,7 +256,7 @@ module.exports = function connectListeners (model) {
     active = model[selected]
 
     setLabel(active.label, active.type)
-    speed.value = (Math.log(active.dataSpeed) / Math.log(2)) + 2
+    speed.value = Math.log(active.dataSpeed) / Math.log(2)
     if (selected === 'oscillator1Frequency') {
       selectOscillatorType(model.oscillator1Frequency.type)
     } else if (selected === 'oscillator2Frequency') {
@@ -269,7 +265,7 @@ module.exports = function connectListeners (model) {
   }
 
   function speedChange (evt) {
-    active.dataSpeed = Math.pow(2, evt.target.value - 2)
+    active.dataSpeed = Math.pow(2, evt.target.value)
   }
 
   function echoLengthChange (evt) {
@@ -370,7 +366,7 @@ function canvasFields () {
   return {
     data: arr,
     dataPos: 0,
-    dataSpeed: 0.25
+    dataSpeed: 0.5
   }
 }
 

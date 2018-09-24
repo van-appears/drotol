@@ -24,7 +24,7 @@ module.exports = function connectListeners (model) {
     active = model[selected]
 
     setLabel(active.label, active.type)
-    speed.value = (Math.log(active.dataSpeed) / Math.log(2)) + 2
+    speed.value = Math.log(active.dataSpeed) / Math.log(2)
     if (selected === 'oscillator1Frequency') {
       selectOscillatorType(model.oscillator1Frequency.type)
     } else if (selected === 'oscillator2Frequency') {
@@ -33,7 +33,7 @@ module.exports = function connectListeners (model) {
   }
 
   function speedChange (evt) {
-    active.dataSpeed = Math.pow(2, evt.target.value - 2)
+    active.dataSpeed = Math.pow(2, evt.target.value)
   }
 
   function echoLengthChange (evt) {

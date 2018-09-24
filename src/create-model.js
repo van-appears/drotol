@@ -6,7 +6,7 @@ function canvasFields () {
   return {
     data: arr,
     dataPos: 0,
-    dataSpeed: 0.25
+    dataSpeed: 0.5
   }
 }
 

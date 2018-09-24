@@ -6,12 +6,11 @@ var lastX = 0
 var lastY = 0
 var isStarted = false
 var isDragging = false
+context.lineWidth = 1.0
 
 function resetCanvas () {
-  context.fillStyle = '#e6e6e6'
-  context.fillRect(0, 0, 255, 255)
+  context.clearRect(0, 0, 255, 255)
   context.beginPath()
-  context.lineWidth = 1.0
   context.strokeStyle = '#ddd'
   context.moveTo(0, 128)
   context.lineTo(255, 128)
@@ -22,11 +21,12 @@ function resetCanvas () {
 function renderData (data) {
   context.beginPath()
   context.strokeStyle = '#999'
-  for (let i = 0; i < 128; i++) {
-    const v1 = data[i]
-    const v2 = data[i + 1]
-    context.moveTo(i * 2, v1)
-    context.lineTo((i + 1) * 2, v2)
+  let v1 = data[0]
+  context.moveTo(0, v1)
+  for (let i = 1; i < 128; i++) {
+    const v2 = data[i]
+    context.lineTo(i * 2, v2)
+    v1 = v2
   }
   context.stroke()
   context.closePath()

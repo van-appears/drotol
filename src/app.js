@@ -13,11 +13,7 @@ initialiseValues(audioGraph, model)
 connectListeners(model)
 graphControl.start()
 
-var flop = false
 setInterval(function () {
   graphControl.update()
-  if (flop) {
-    canvasControl.update()
-  }
-  flop = !flop
-}, 20)
+  canvasControl.update()
+}, 40)
