@@ -84,17 +84,20 @@ var isStarted = false
 var isDragging = false
 context.lineWidth = 1.0
 
-function resetCanvas () {
-  context.clearRect(0, 0, 255, 255)
-  context.beginPath()
-  context.strokeStyle = '#ddd'
-  context.moveTo(0, 128)
-  context.lineTo(255, 128)
-  context.stroke()
-  context.closePath()
+function renderCentreLine () {
+  var bgCanvas = document.querySelector('#bg')
+  var bgContext = canvas.getContext('2d')
+  bgContext.beginPath()
+  bgContext.strokeStyle = '#ddd'
+  bgContext.lineWidth = 1.0
+  bgContext.moveTo(0, 128)
+  bgContext.lineTo(255, 128)
+  bgContext.stroke()
+  bgContext.closePath()
 }
 
 function renderData (data) {
+  context.clearRect(0, 0, 255, 255)
   context.beginPath()
   context.strokeStyle = '#999'
   let v1 = data[0]
@@ -156,13 +159,13 @@ function CanvasControl (model) {
   canvas.addEventListener('touchmove', this.mouseMove.bind(this))
   canvas.addEventListener('touchend', this.mouseUp.bind(this))
   canvas.addEventListener('touchcancel', this.mouseUp.bind(this))
+  renderCentreLine()
 }
 
 CanvasControl.prototype.update = function () {
   var active = this.model[this.model.active]
   this.data = active && active.data
   this.updated = false
-  resetCanvas()
   if (!this.data) return
   renderData(this.data)
   renderPlayline(active && active.dataPos)

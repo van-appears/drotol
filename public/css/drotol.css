@@ -14,8 +14,7 @@ body {
 canvas {
   margin: 0;
   border: none;
-  position: relative;
-  background: #dddddd;
+  position: absolute;
 }
 
 input[ type='radio' ],
@@ -172,4 +171,13 @@ input[ type='checkbox' ]:checked + label {
 
 .what {
   margin: 10px 0;
+}
+
+.layers {
+  position: relative;
+  text-align: left;
+  display: inline-block;
+  background: #dddddd;
+  width: 255px;
+  height: 255px;
 }
