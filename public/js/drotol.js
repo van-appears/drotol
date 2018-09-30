@@ -74,9 +74,11 @@ AudioGraphControl.prototype.update = function () {
 module.exports = AudioGraphControl
 
 },{}],2:[function(require,module,exports){
+var layers = document.querySelector('.layers')
+var layersLeft = layers.offsetLeft
+var layersTop = layers.offsetTop
+
 var canvas = document.querySelector('#draw')
-var canvasLeft = canvas.offsetLeft
-var canvasTop = canvas.offsetTop
 var context = canvas.getContext('2d')
 var lastX = 0
 var lastY = 0
@@ -139,14 +141,14 @@ function asX (evt) {
   var useEvent = evt.changedTouches
     ? evt.changedTouches[ 0 ]
     : evt
-  return Math.floor((useEvent.pageX - canvasLeft) / 2)
+  return Math.floor((useEvent.pageX - layersLeft) / 2)
 }
 
 function asY (evt) {
   var useEvent = evt.changedTouches
     ? evt.changedTouches[ 0 ]
     : evt
-  return useEvent.pageY - canvasTop
+  return useEvent.pageY - layersTop
 }
 
 function CanvasControl (model) {
@@ -182,7 +184,7 @@ CanvasControl.prototype.mouseDown = function (mouseEvt) {
 CanvasControl.prototype.mouseUp = function (mouseEvt) {
   if (!this.data) return
   var toX = asX(mouseEvt)
-  var toY = mouseEvt.pageY - canvasTop
+  var toY = asY(mouseEvt)
   if (isDragging) {
     setRange(this.data, lastX, lastY, toX, toY)
   } else if (isStarted) {
