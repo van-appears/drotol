@@ -1,6 +1,6 @@
-var layers = document.querySelector('.layers')
-var layersLeft = layers.offsetLeft
-var layersTop = layers.offsetTop
+var layersRect = document.querySelector('.layers').getBoundingClientRect()
+var layersLeft = 0
+var layersTop = 0
 
 var canvas = document.querySelector('#draw')
 var context = canvas.getContext('2d')
@@ -86,6 +86,10 @@ function CanvasControl (model) {
   canvas.addEventListener('touchend', this.mouseUp.bind(this))
   canvas.addEventListener('touchcancel', this.mouseUp.bind(this))
   renderCentreLine()
+
+  var layersRect = document.querySelector('.layers').getBoundingClientRect()
+  layersLeft = layersRect.left
+  layersTop = layersRect.top
 }
 
 CanvasControl.prototype.update = function () {

@@ -1,10 +1,12 @@
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   font-family: 'Arial', 'Helvetica', sans-serif;
   height: 100%;
   width: 100%;
-  background: #efefef;
+  background: #efefef;,
+  overscroll-behavior-y: contain;
 }
 
 body {
@@ -171,6 +173,7 @@ input[ type='checkbox' ]:checked + label {
 
 .what {
   margin: 10px 0;
+  height: 20px;
 }
 
 .layers {

@@ -74,9 +74,9 @@ AudioGraphControl.prototype.update = function () {
 module.exports = AudioGraphControl
 
 },{}],2:[function(require,module,exports){
-var layers = document.querySelector('.layers')
-var layersLeft = layers.offsetLeft
-var layersTop = layers.offsetTop
+var layersRect = document.querySelector('.layers').getBoundingClientRect()
+var layersLeft = 0
+var layersTop = 0
 
 var canvas = document.querySelector('#draw')
 var context = canvas.getContext('2d')
@@ -162,6 +162,10 @@ function CanvasControl (model) {
   canvas.addEventListener('touchend', this.mouseUp.bind(this))
   canvas.addEventListener('touchcancel', this.mouseUp.bind(this))
   renderCentreLine()
+
+  var layersRect = document.querySelector('.layers').getBoundingClientRect()
+  layersLeft = layersRect.left
+  layersTop = layersRect.top
 }
 
 CanvasControl.prototype.update = function () {
@@ -221,19 +225,20 @@ var CanvasControl = require('./CanvasControl')
 var connectListeners = require('./connect-listeners')
 var initialiseValues = require('./initialise-values')
 
-var model = createModel()
-var audioGraph = createAudioGraph()
-var graphControl = new AudioGraphControl(audioGraph, model)
-var canvasControl = new CanvasControl(model)
-initialiseValues(audioGraph, model)
-connectListeners(model)
-graphControl.start()
+window.onload = function() {
+  var model = createModel()
+  var audioGraph = createAudioGraph()
+  var graphControl = new AudioGraphControl(audioGraph, model)
+  var canvasControl = new CanvasControl(model)
+  initialiseValues(audioGraph, model)
+  connectListeners(model)
+  graphControl.start()
 
-setInterval(function () {
-  graphControl.update()
-  canvasControl.update()
-}, 40)
-
+  setInterval(function () {
+    graphControl.update()
+    canvasControl.update()
+  }, 40)
+}
 },{"./AudioGraphControl":1,"./CanvasControl":2,"./connect-listeners":4,"./create-audio-graph":5,"./create-model":6,"./initialise-values":7}],4:[function(require,module,exports){
 module.exports = function connectListeners (model) {
   var active = model[model.active]
