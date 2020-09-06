@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Drotol</title>
+    <link href="css/drotol.css" rel="stylesheet" />
+    <script src="js/drotol.js" defer></script>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="model">
+        <input
+          id="oscillator1"
+          type="radio"
+          name="box"
+          value="oscillator1Frequency"
+        />
+        <label for="oscillator1" title="Frequency 1"></label>
+        <input
+          id="oscillator2"
+          type="radio"
+          name="box"
+          value="oscillator2Frequency"
+        />
+        <label for="oscillator2" title="Frequency 2"></label>
+        <input id="gain" type="radio" name="box" value="gain" />
+        <label for="gain" title="Gain"></label>
+        <input
+          id="filterFrequency"
+          type="radio"
+          name="box"
+          value="filterFrequency"
+        />
+        <label for="filterFrequency" title="Filter Cutoff"></label>
+        <input id="filterQ" type="radio" name="box" value="filterQ" />
+        <label for="filterQ" title="Filter Q"></label>
+        <input id="echo" type="radio" name="box" value="echo" />
+        <label for="echo" title="Echo"></label>
+      </div>
+      <div class="what">Drotol</div>
+      <div class="layers">
+        <canvas id="bg" width="255" height="255"></canvas>
+        <canvas id="draw" width="255" height="255"></canvas>
+      </div>
+      <div class="lineControls">
+        <label for="speed" title="Speed"></label>
+        <input id="speed" type="range" min="-2" max="0" step="any" value="-1" />
+      </div>
+      <div class="echoControls">
+        <label for="echoLength" title="Echo length"></label>
+        <input
+          id="echoLength"
+          type="range"
+          min="0.01"
+          max="1"
+          step="any"
+          value="0.1"
+        />
+        <br />
+        <label for="echoSustain" title="Speed"></label>
+        <input
+          id="echoSustain"
+          type="range"
+          min="0.05"
+          max="0.95"
+          step="any"
+          value="0.5"
+        />
+        <br />
+        <input id="echoOnOff" type="checkbox" />
+        <label for="echoOnOff" title="Echo On/Off"></label>
+      </div>
+      <div class="oscillatorControls">
+        <input id="sine" type="radio" name="oscillatorType" value="sine" />
+        <label for="sine" title="Sine"></label>
+        <input
+          id="sawtooth"
+          type="radio"
+          name="oscillatorType"
+          value="sawtooth"
+        />
+        <label for="sawtooth" title="Sawtooth"></label>
+        <input
+          id="triangle"
+          type="radio"
+          name="oscillatorType"
+          value="triangle"
+        />
+        <label for="triangle" title="Triangle"></label>
+        <input id="square" type="radio" name="oscillatorType" value="square" />
+        <label for="square" title="Square"></label>
+        <input id="lfoOnOff" type="checkbox" />
+        <label for="lfoOnOff" title="LFO On/Off"></label>
+      </div>
+      <div class="filterControls">
+        <input id="allpass" type="radio" name="filterType" value="allpass" />
+        <label for="allpass" title="None"></label>
+        <input id="lowpass" type="radio" name="filterType" value="lowpass" />
+        <label for="lowpass" title="Low pass"></label>
+        <input id="highpass" type="radio" name="filterType" value="highpass" />
+        <label for="highpass" title="High pass"></label>
+        <input id="bandpass" type="radio" name="filterType" value="bandpass" />
+        <label for="bandpass" title="Band pass"></label>
+      </div>
+    </div>
+  </body>
+</html>
