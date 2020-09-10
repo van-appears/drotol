@@ -5,7 +5,7 @@ body {
   font-family: "Arial", "Helvetica", sans-serif;
   height: 100%;
   width: 100%;
-  background: #efefef;
+  background: #ddd;
   overflow-y: hidden;
 }
 
@@ -39,7 +39,8 @@ input[type="range"] {
   height: 32px;
 }
 
-label {
+label,
+a.sourceCode {
   display: inline-block;
   cursor: pointer;
   outline: 0;
@@ -187,4 +188,11 @@ input[type="checkbox"]:checked + label {
   background: #dddddd;
   width: 255px;
   height: 255px;
+}
+
+a.sourceCode {
+  background-position: -448px -32px;
+  position: relative;
+  left: -38px;
+  bottom: -58px;
 }
