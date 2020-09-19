@@ -27,3 +27,14 @@ The icons under the Echo control are, top to bottom
 * Echo length
 * Echo decay
 * Echo on/off
+
+# development
+To run development mode
+```
+npm start
+```
+To create a production build
+```
+export NODE_ENV=production
+npm run build
+```
