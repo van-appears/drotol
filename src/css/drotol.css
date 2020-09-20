@@ -193,8 +193,14 @@ input[type="checkbox"]:checked + label {
 
 a.home {
   background-position: -576px -32px;
+  position: relative;
+  left: 136px;
+  top: 2px;
 }
 
 a.sourceCode {
   background-position: -576px 0;
+  position: relative;
+  left: 136px;
+  top: 2px;
 }
