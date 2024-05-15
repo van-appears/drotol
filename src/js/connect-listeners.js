@@ -64,7 +64,7 @@ module.exports = function connectListeners(model) {
     switch (selected) {
       case "notch":
       case "bandpass":
-        model.filterQ.multiplier = 30;
+        model.filterQ.multiplier = 30; // should be small
         model.filterQ.label = "Filter bandwidth";
         break;
       default:

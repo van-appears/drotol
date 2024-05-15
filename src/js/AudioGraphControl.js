@@ -34,8 +34,10 @@ function AudioGraphControl(audioGraph, model) {
 }
 
 AudioGraphControl.prototype.start = function () {
-  this.audioGraph.oscillator1.start();
-  this.audioGraph.oscillator2.start();
+  return this.audioGraph.audioCtx.resume().then(() => {
+    this.audioGraph.oscillator1.start(0);
+    this.audioGraph.oscillator2.start(0);
+  });
 };
 
 AudioGraphControl.prototype.update = function () {
@@ -53,30 +55,29 @@ AudioGraphControl.prototype.update = function () {
   }
   if (this.model.echo.length !== this.lastEchoLength) {
     this.lastEchoLength = this.model.echo.length;
-    this.audioGraph.delay.delayTime.value = this.lastEchoLength;
+    this.audioGraph.delay.delayTime.setTargetAtTime(this.lastEchoLength, 0, 0);
   }
 
   updateModelPositions(this.model);
-  this.audioGraph.delayGain.gain.value = this.model.echo.enabled
-    ? this.model.echo.sustain
-    : 0;
+  this.audioGraph.delayGain.gain.setTargetAtTime
+    (this.model.echo.enabled ? this.model.echo.sustain : 0, 0, 0);
 
   const frequency1 = getFrequency(this.model.oscillator1Frequency);
-  this.audioGraph.oscillator1.frequency.value = frequency1;
+  this.audioGraph.oscillator1.frequency.setTargetAtTime(frequency1, 0, 0);
 
   const frequency2 = getFrequency(this.model.oscillator2Frequency);
-  this.audioGraph.oscillator2.frequency.value = frequency2;
+  this.audioGraph.oscillator2.frequency.setTargetAtTime(frequency2, 0, 0);
 
   const gain = getScaledValue(this.model.gain);
-  this.audioGraph.oscillatorGain.gain.value = gain;
+  this.audioGraph.oscillatorGain.gain.setTargetAtTime(gain, 0, 0);
 
   const filterFrequency =
     60 * Math.pow(100, getScaledValue(this.model.filterFrequency));
-  this.audioGraph.filter.frequency.value = filterFrequency;
+  this.audioGraph.filter.frequency.setTargetAtTime(filterFrequency, 0, 0);
 
   const filterQ =
     this.model.filterQ.multiplier * getScaledValue(this.model.filterQ);
-  this.audioGraph.filter.Q.value = filterQ;
+  this.audioGraph.filter.Q.setTargetAtTime(filterQ, 0, 0);
 };
 
 module.exports = AudioGraphControl;

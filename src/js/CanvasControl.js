@@ -20,6 +20,10 @@ function renderCentreLine() {
   bgContext.lineTo(255, 128);
   bgContext.stroke();
   bgContext.closePath();
+  if (!this.started) {
+    bgContext.font = "16px sans-serif";
+    bgContext.fillText("click to start", 85, 120);
+  }
 }
 
 function renderData(data) {
@@ -71,8 +75,9 @@ function asY(evt) {
   return useEvent.pageY - layersTop;
 }
 
-function CanvasControl(model) {
+function CanvasControl(model, startedCallback) {
   this.model = model;
+  this.startedCallback = startedCallback;
   canvas.addEventListener("mousedown", this.mouseDown.bind(this));
   canvas.addEventListener("mousemove", this.mouseMove.bind(this));
   canvas.addEventListener("mouseout", this.mouseUp.bind(this));
@@ -106,6 +111,9 @@ CanvasControl.prototype.mouseDown = function (mouseEvt) {
 };
 
 CanvasControl.prototype.mouseUp = function (mouseEvt) {
+  if (!this.model.started) {
+    this.startedCallback();
+  }
   if (!this.data) return;
   const toX = asX(mouseEvt);
   const toY = asY(mouseEvt);

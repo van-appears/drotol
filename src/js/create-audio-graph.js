@@ -20,6 +20,7 @@ delayGain.connect(delay);
 
 module.exports = function createAudioGraph() {
   return {
+    audioCtx: audioCtx,
     oscillator1: oscillator1,
     oscillator2: oscillator2,
     oscillatorGain: oscillatorGain,

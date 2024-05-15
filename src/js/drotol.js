@@ -9,13 +9,15 @@ window.onload = function () {
   const model = createModel();
   const audioGraph = createAudioGraph();
   const graphControl = new AudioGraphControl(audioGraph, model);
-  const canvasControl = new CanvasControl(model);
+  const canvasControl = new CanvasControl(model, () => {
+    graphControl.start().then(() => {
+      setInterval(function () {
+        graphControl.update();
+        canvasControl.update();
+      }, 40);
+    });
+  });
+
   initialiseValues(audioGraph, model);
   connectListeners(model);
-  graphControl.start();
-
-  setInterval(function () {
-    graphControl.update();
-    canvasControl.update();
-  }, 40);
 };

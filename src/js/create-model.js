@@ -21,6 +21,7 @@ function extend(obj, additional) {
 
 module.exports = function createModel() {
   return {
+    started: false,
     active: "oscillator1Frequency",
     oscillator1Frequency: extend(
       {
